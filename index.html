@@ -6,7 +6,6 @@
         <link rel="stylesheet" type="text/css" href="./style.css" media="all" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="game.js">
-            // take start time
             var lastStingTime;
             var bear;
             var bees;
@@ -25,6 +24,7 @@
             <br> and the refresh period <input type="text" id="periodTimer" value="10" size="3"> ms </p>
             <p>You can adjust the bear's speed <input type="text" id="dBear" value="100" size="3"> px/ms</p>
             <h2>Press left, right, up, down keys to move the bear</h2>
+            <button onclick=start()>Restart</button> <button onclick=addBee()>Add Bee</button>
         </div>
         <div id="scores">
             <table>

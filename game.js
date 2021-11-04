@@ -113,6 +113,14 @@ function createBeeImg(wNum) {
     return img;
 }
 
+function addBee() {
+    document.getElementById("nbBees").value = bees.length + 1;
+
+    let bee = new Bee(bees.length + 1);
+    bee.display();
+    bees.push(bee);
+}
+
 function makeBees() {
     //get number of bees specified by the user
     let nbBees = document.getElementById("nbBees").value;
@@ -194,17 +202,21 @@ function isHit(defender, offender) {
         let score = hits.innerHTML;
         score = Number(score) + 1; //increment the score
         hits.innerHTML = score; //display the new score
-        //calculate longest duration
-        let newStingTime = new Date();
-        let thisDuration = newStingTime - lastStingTime;
-        lastStingTime = newStingTime;
-        let longestDuration = Number(duration.innerHTML);
-        if (longestDuration === 0) {
-            longestDuration = thisDuration;
-        } else {
-            if (longestDuration < thisDuration) longestDuration = thisDuration;
+
+        if(typeof lastStingTime != 'undefined') {
+            //calculate longest duration
+            let newStingTime = new Date();
+            let thisDuration = newStingTime - lastStingTime;
+            lastStingTime = newStingTime;
+            let longestDuration = Number(duration.innerHTML);
+            if (isNaN(longestDuration)) longestDuration = 0;
+            if (longestDuration === 0) {
+                longestDuration = thisDuration;
+            } else {
+               if (longestDuration < thisDuration) longestDuration = thisDuration;
+            }
+            document.getElementById("duration").innerHTML = longestDuration;
         }
-        document.getElementById("duration").innerHTML = longestDuration;
     }
 }
 
@@ -232,8 +244,23 @@ function overlap(element1, element2) {
 }
 
 function start() {
+    if (typeof updateTimer != 'undefined') {
+        hits.innerHTML = '0';
+        duration.innerHTML = '?';
+        clearTimeout(updateTimer);
+        bees.forEach(bee => {
+            bee.htmlElement.remove();
+        })
+        lastStingTime = undefined;
+    }
+    
+
     bear = new Bear();
-    lastStingTime = new Date();
+
+    // initialise last sting time after the bear moves
+    document.addEventListener('keydown', () => {
+        if(typeof lastStingTime == 'undefined') lastStingTime = new Date();
+    })
 
     //create new array for bees
     bees = new Array();
